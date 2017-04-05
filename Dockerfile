@@ -66,6 +66,3 @@ RUN echo "CleanUp ..." &&\
 
 # Working Directory
 WORKDIR "$WORKING_DIRECTORY"
-
-# Entrypoint
-ENTRYPOINT ["/bin/bash"]

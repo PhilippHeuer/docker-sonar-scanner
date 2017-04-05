@@ -1,20 +1,24 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-###
+############################################################
 # GitLab Sonar Integration
 # --
 # A default project key will be generated using the repository path.
-###
+############################################################
 
+SONAR_HOST=
 SONAR_TOKEN=$SONAR_TOKEN
-$SONAR_PROJECT_KEY=
-$SONAR_PROJECT_VERSION=
-$SONAR_SOURCES="."
+SONAR_PROJECT_KEY="$gitlab:CI_PROJECT_PATH"
+SONAR_PROJECT_VERSION=
+SONAR_SOURCES="."
 
 ##
 # Execution
 ##
 COMMAND="sonar-scanner "
+
+# Host
+COMMAND="-D sonar.host=\"$SONAR_HOST\""
 
 # Project Key
 COMMAND="-D sonar.projectKey=\"$SONAR_PROJECT_KEY\""

@@ -68,5 +68,4 @@ RUN echo "CleanUp ..." &&\
 WORKDIR "$WORKING_DIRECTORY"
 
 # Entrypoint
-ENTRYPOINT ["/bin/sh"]
-# CMD sonar-runner -Dsonar.projectBaseDir=./src
+ENTRYPOINT ["/bin/bash"]

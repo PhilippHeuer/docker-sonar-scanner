@@ -11,11 +11,6 @@
 ##
 COMMAND="sonar-scanner "
 
-# Debug
-if [ ! -z "$DEBUG" ]; then
-	COMMAND="$COMMAND -X"
-fi
-
 # Host
 COMMAND="$COMMAND -Dsonar.host.url=\"$SONAR_HOST\""
 
@@ -32,7 +27,8 @@ fi
 
 # GitLab - Auto Configuration
 # - Project Key
-COMMAND="$COMMAND -Dsonar.projectKey=\"$CI_PROJECT_PATH\""
+SONAR_PROJECT_KEY=$(echo "$CI_PROJECT_NAMESPACE:$CI_PROJECT_NAME" | sed -r 's/\\/_/g')
+COMMAND="$COMMAND -Dsonar.projectKey=\"$SONAR_PROJECT_KEY\""
 
 # - Project Id
 if [ ! -z "$CI_PROJECT_ID" ]; then
@@ -54,6 +50,14 @@ fi
 if [ ! -z $CI_BUILD_REF_NAME ]; then
 	COMMAND="$COMMAND -Dsonar.gitlab.ref_name=\"$CI_BUILD_REF_NAME\""
 fi
+# - Project Link
+if [ ! -z $CI_PROJECT_URL ]; then
+	COMMAND="$COMMAND -Dsonar.links.homepage=\"$CI_PROJECT_URL\""
+fi
+# - Debug Enabled?
+if [ ! -z "$CI_DEBUG_TRACE" ]; then
+	COMMAND="$COMMAND -X"
+fi
 
 # SourceCode Directory
 if [ ! -z "$SONAR_SOURCES" ]; then
@@ -66,14 +70,10 @@ fi
 COMMAND="$COMMAND -Dsonar.analysis.mode=\"$SONAR_ANALYSIS_MODE\""
 COMMAND="$COMMAND -Dsonar.issuesReport.console.enable=true"
 
-# PROFILE???????
-if [ ! -z "$SONAR_PROFILE" ]; then
-	COMMAND="$COMMAND -Dsonar.profile=\"$SONAR_PROFILE\""
-fi
-
-# O: Language (Java/...)
+# Set a Language (defaults to multi-language analysis)
 if [ ! -z "$SONAR_LANGUAGE" ]; then
 	COMMAND="$COMMAND -Dsonar.language=\"$SONAR_LANGUAGE\""
 fi
 
+# Run Scanner
 eval $COMMAND

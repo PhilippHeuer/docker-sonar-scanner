@@ -6,78 +6,76 @@
 # A default project key will be generated using the repository path.
 ############################################################
 
-SONAR_HOST=
-SONAR_TOKEN=$SONAR_TOKEN
-SONAR_PROJECT_KEY="$gitlab:CI_PROJECT_PATH"
-SONAR_PROJECT_VERSION=
-SONAR_SOURCES="."
-
 ##
 # Execution
 ##
 COMMAND="sonar-scanner "
-
-# Host
-COMMAND="-D sonar.host=\"$SONAR_HOST\""
-
-# Project Key
-COMMAND="-D sonar.projectKey=\"$SONAR_PROJECT_KEY\""
-
-# Project Version
-if [ ! -z "$SONAR_PROJECT_VERSION" ]; then
-	COMMAND="$COMMAND -D sonar.projectVersion=\"$SONAR_PROJECT_VERSION\""
-fi
 
 # Debug
 if [ ! -z "$DEBUG" ]; then
 	COMMAND="$COMMAND -X"
 fi
 
-# Sonar Project Name
+# Host
+COMMAND="-Dsonar.host=\"$SONAR_HOST\""
+
+# Login Token
+if [ ! -z "$SONAR_TOKEN" ]; then
+	COMMAND="$COMMAND -Dsonar.login=\"$SONAR_TOKEN\""
+fi
+
+
+# Project Version
+if [ ! -z "$SONAR_PROJECT_VERSION" ]; then
+	COMMAND="$COMMAND -Dsonar.projectVersion=\"$SONAR_PROJECT_VERSION\""
+fi
+
+# GitLab - Auto Configuration
+# - Project Key
+SONAR_PROJECT_KEY="gitlab:$CI_PROJECT_PATH"
+COMMAND="-Dsonar.projectKey=\"$SONAR_PROJECT_KEY\""
+
+
+# - Project Id
+if [ ! -z "$CI_PROJECT_ID" ]; then
+	COMMAND="$COMMAND -Dsonar.gitlab.project_id=\"$CI_PROJECT_ID\""
+fi
+# - Project Name
 if [ ! -z "$SONAR_PROJECT_NAME" ]; then
 	COMMAND="$COMMAND -Dsonar.projectName=\"$SONAR_PROJECT_NAME\""
 fi
-
-# Build Reference
+# - Branch
+if [ ! -z $CI_COMMIT_REF_NAME ]; then
+	COMMAND="$COMMAND -Dsonar.branch=\"$CI_COMMIT_REF_NAME\""
+fi
+# - Commit Hash
 if [ ! -z $CI_BUILD_REF ]; then
 	COMMAND="$COMMAND -Dsonar.gitlab.commit_sha=\"$CI_BUILD_REF\""
 fi
-
-# Build Reference
+# - Commit Ref Name
 if [ ! -z $CI_BUILD_REF_NAME ]; then
-	COMMAND="$COMMAND -D sonar.gitlab.ref_name=\"$CI_BUILD_REF_NAME\""
+	COMMAND="$COMMAND -Dsonar.gitlab.ref_name=\"$CI_BUILD_REF_NAME\""
 fi
 
-# Sonar Branch
-if [ ! -z $SONAR_BRANCH ]; then
-	COMMAND="$COMMAND -Dsonar.branch=\"$SONAR_BRANCH\""
+# SourceCode Directory
+if [ ! -z "$SONAR_SOURCES" ]; then
+	COMMAND="$COMMAND -Dsonar.sources=\"$SONAR_SOURCES\""
+elif
+	COMMAND="$COMMAND -Dsonar.sources=\".\""
 fi
-if [ ! -z $SONAR_ANALYSIS_MODE ]; then
-	COMMAND="$COMMAND -Dsonar.analysis.mode=\"$SONAR_ANALYSIS_MODE\""
-	if [ $SONAR_ANALYSIS_MODE="preview" ]; then
-		COMMAND="$COMMAND -Dsonar.issuesReport.console.enable=true"
-	fi
+
+# Analysis Configuration
+COMMAND="$COMMAND -Dsonar.analysis.mode=\"$SONAR_ANALYSIS_MODE\""
+COMMAND="$COMMAND -Dsonar.issuesReport.console.enable=true"
+
+# PROFILE???????
+if [ ! -z "$SONAR_PROFILE" ]; then
+	COMMAND="$COMMAND -Dsonar.profile=\"$SONAR_PROFILE\""
 fi
 
 # O: Language (Java/...)
 if [ ! -z "$SONAR_LANGUAGE" ]; then
-	COMMAND="$COMMAND -D sonar.language=\"$SONAR_LANGUAGE\""
-fi
-
-## GitLab
-
-# GitLab Project Id
-if [ ! -z "$SONAR_GITLAB_PROJECT_ID" ]; then
-	COMMAND="$COMMAND -D sonar.gitlab.project_id=\"$SONAR_GITLAB_PROJECT_ID\""
-fi
-
-# Sources (
-if [ ! -z "$SONAR_SOURCES" ]; then
-	COMMAND="$COMMAND -Dsonar.sources=\"$SONAR_SOURCES\""
-fi
-
-if [ ! -z "$SONAR_PROFILE" ]; then
-	COMMAND="$COMMAND -Dsonar.profile=\"$SONAR_PROFILE\""
+	COMMAND="$COMMAND -Dsonar.language=\"$SONAR_LANGUAGE\""
 fi
 
 eval $COMMAND

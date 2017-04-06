@@ -36,7 +36,7 @@ if [ ! -z "$CI_PROJECT_ID" ]; then
 fi
 # - Project Name
 if [ ! -z "$CI_PROJECT_NAME" ]; then
-	COMMAND="$COMMAND -Dsonar.projectName=\"$CI_PROJECT_NAME\""
+	COMMAND="$COMMAND -Dsonar.projectName=\"$CI_PROJECT_NAMESPACE / $CI_PROJECT_NAME\""
 fi
 # - Branch
 if [ ! -z $CI_COMMIT_REF_NAME ]; then

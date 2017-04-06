@@ -60,7 +60,7 @@ fi
 # SourceCode Directory
 if [ ! -z "$SONAR_SOURCES" ]; then
 	COMMAND="$COMMAND -Dsonar.sources=\"$SONAR_SOURCES\""
-elif
+else
 	COMMAND="$COMMAND -Dsonar.sources=\".\""
 fi
 

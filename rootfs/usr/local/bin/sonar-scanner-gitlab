@@ -17,7 +17,7 @@ if [ ! -z "$DEBUG" ]; then
 fi
 
 # Host
-COMMAND="$COMMAND -Dsonar.host=\"$SONAR_HOST\""
+COMMAND="$COMMAND -Dsonar.host.url=\"$SONAR_HOST\""
 
 # Login Token
 if [ ! -z "$SONAR_TOKEN" ]; then

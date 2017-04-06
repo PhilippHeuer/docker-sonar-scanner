@@ -17,7 +17,7 @@ if [ ! -z "$DEBUG" ]; then
 fi
 
 # Host
-COMMAND="-Dsonar.host=\"$SONAR_HOST\""
+COMMAND="$COMMAND -Dsonar.host=\"$SONAR_HOST\""
 
 # Login Token
 if [ ! -z "$SONAR_TOKEN" ]; then
@@ -32,9 +32,7 @@ fi
 
 # GitLab - Auto Configuration
 # - Project Key
-SONAR_PROJECT_KEY="gitlab:$CI_PROJECT_PATH"
-COMMAND="-Dsonar.projectKey=\"$SONAR_PROJECT_KEY\""
-
+COMMAND="$COMMAND -Dsonar.projectKey=\"$CI_PROJECT_PATH\""
 
 # - Project Id
 if [ ! -z "$CI_PROJECT_ID" ]; then

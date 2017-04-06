@@ -31,29 +31,35 @@ SONAR_PROJECT_KEY=$(echo "$CI_PROJECT_NAMESPACE:$CI_PROJECT_NAME" | sed -r 's/\\
 COMMAND="$COMMAND -Dsonar.projectKey=\"$SONAR_PROJECT_KEY\""
 
 # - Project Id
-if [ ! -z "$CI_PROJECT_ID" ]; then
+if [ ! -z "$CI_PROJECT_ID" ] && [ "$SONAR_ANALYSIS_MODE" == "preview" ]; then
 	COMMAND="$COMMAND -Dsonar.gitlab.project_id=\"$CI_PROJECT_ID\""
 fi
+
+# - Commit Hash
+if [ ! -z $CI_BUILD_REF ] && [ "$SONAR_ANALYSIS_MODE" == "preview" ]; then
+	COMMAND="$COMMAND -Dsonar.gitlab.commit_sha=\"$CI_BUILD_REF\""
+fi
+
+# - Commit Ref Name
+if [ ! -z $CI_BUILD_REF_NAME ] && [ "$SONAR_ANALYSIS_MODE" == "preview" ]; then
+	COMMAND="$COMMAND -Dsonar.gitlab.ref_name=\"$CI_BUILD_REF_NAME\""
+fi
+
 # - Project Name
 if [ ! -z "$CI_PROJECT_NAME" ]; then
 	COMMAND="$COMMAND -Dsonar.projectName=\"$CI_PROJECT_NAMESPACE / $CI_PROJECT_NAME\""
 fi
+
 # - Branch
 if [ ! -z $CI_COMMIT_REF_NAME ]; then
 	COMMAND="$COMMAND -Dsonar.branch=\"$CI_COMMIT_REF_NAME\""
 fi
-# - Commit Hash
-if [ ! -z $CI_BUILD_REF ]; then
-	COMMAND="$COMMAND -Dsonar.gitlab.commit_sha=\"$CI_BUILD_REF\""
-fi
-# - Commit Ref Name
-if [ ! -z $CI_BUILD_REF_NAME ]; then
-	COMMAND="$COMMAND -Dsonar.gitlab.ref_name=\"$CI_BUILD_REF_NAME\""
-fi
+
 # - Project Link
 if [ ! -z $CI_PROJECT_URL ]; then
 	COMMAND="$COMMAND -Dsonar.links.homepage=\"$CI_PROJECT_URL\""
 fi
+
 # - Debug Enabled?
 if [ ! -z "$CI_DEBUG_TRACE" ]; then
 	COMMAND="$COMMAND -X"

@@ -35,8 +35,8 @@ if [ ! -z "$CI_PROJECT_ID" ]; then
 	COMMAND="$COMMAND -Dsonar.gitlab.project_id=\"$CI_PROJECT_ID\""
 fi
 # - Project Name
-if [ ! -z "$SONAR_PROJECT_NAME" ]; then
-	COMMAND="$COMMAND -Dsonar.projectName=\"$SONAR_PROJECT_NAME\""
+if [ ! -z "$CI_PROJECT_NAME" ]; then
+	COMMAND="$COMMAND -Dsonar.projectName=\"$CI_PROJECT_NAME\""
 fi
 # - Branch
 if [ ! -z $CI_COMMIT_REF_NAME ]; then
